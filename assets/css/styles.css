@@ -22,7 +22,11 @@
   background-color: var(--bs-info-bg-subtle);
 }
 
-#footer {
+#fundadores {
   background-color: #001B2Cff;
+}
+
+#footer {
+  background-color: var(--bs-info-bg-subtle);
 }
 
