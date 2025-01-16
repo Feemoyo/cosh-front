@@ -30,3 +30,11 @@
   background-color: var(--bs-info-bg-subtle);
 }
 
+#checklist {
+  padding-top: 65px;
+}
+
+.side-botton {
+  margin-right: 10px;
+}
+
