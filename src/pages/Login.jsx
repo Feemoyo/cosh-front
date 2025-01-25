@@ -1,3 +1,4 @@
+import FormLogin from '../components/FormLogin';
 
 function Login() {
 	return (
@@ -11,11 +12,7 @@ function Login() {
 						<div className="col-md-6 col-xl-4">
 							<div className="card mb-5">
 								<div className="card-body d-flex flex-column align-items-center">
-									<form className="text-center" method="post">
-										<div className="mb-3"><input className="form-control" type="email" name="email" placeholder="Email"></input></div>
-										<div className="mb-3"><input className="form-control" type="password" name="password" placeholder="Password"></input></div>
-										<div className="mb-3"><button className="btn btn-primary d-block w-100" type="submit">Login</button></div>
-									</form>
+									<FormLogin route="/api/token/" method="POST" />
 								</div>
 							</div>
 						</div>
