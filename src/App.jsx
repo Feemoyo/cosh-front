@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import ProtectedRoute from './components/ProtectedRoute'
+import Checklist from './pages/Checklist'
 
 function Logout() {
 	localStorage.clear()
@@ -19,7 +20,7 @@ function App() {
 		<Route path="/" element={<Home />} />
 		<Route path="/login" element={<Login />} />
 		<Route path="/logout" element={<Logout />} />
-		{/* <Route path="/checklist" element={<ProtectedRoute><Checklist /></ProtectedRoute>} /> */}
+		<Route path="/checklist" element={<ProtectedRoute><Checklist /></ProtectedRoute>} />
 		{/* <Route path="*" element={<Navigate to="/login" />} /> */}
 	  </Routes>
 	</BrowserRouter>

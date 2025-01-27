@@ -1,11 +1,10 @@
 import FormLogin from '../components/FormLogin';
+import NavbarClean from '../components/NavbarClean';
 
 function Login() {
 	return (
 		<div>
-			<nav className="navbar navbar-expand-md fixed-top bg-body">
-				<div className="container"><a className="navbar-brand" href="#"><img id="logo" src="./src/assets/img/cosh.png"></img>COSH</a></div>
-			</nav>
+			<NavbarClean />
 			<section className="position-relative py-4 py-xl-5 mt-5">
 				<div className="container">
 					<div className="row d-flex justify-content-center">

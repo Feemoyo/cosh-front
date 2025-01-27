@@ -36,5 +36,22 @@
 
 .side-botton {
   margin-right: 10px;
+  position: relative;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+}
+
+.sidebar {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.project-span {
+  width: 116px;
 }
 
