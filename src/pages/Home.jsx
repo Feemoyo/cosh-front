@@ -1,9 +1,10 @@
+import CoshLogo from "../assets/img/cosh.png";
 
 function Home() {
 	return (
 		<div>
 			<nav className="navbar navbar-expand-md fixed-top bg-body">
-				<div className="container"><a className="navbar-brand" href="#"><img id="logo" src="/src/assets/img/cosh.png"></img>COSH</a><button data-bs-toggle="collapse" className="navbar-toggler" data-bs-target="#navcol-1"><span className="visually-hidden">Toggle navigation</span><span className="navbar-toggler-icon"></span></button>
+				<div className="container"><a className="navbar-brand" href="#"><img id="logo" src={ CoshLogo }></img>COSH</a><button data-bs-toggle="collapse" className="navbar-toggler" data-bs-target="#navcol-1"><span className="visually-hidden">Toggle navigation</span><span className="navbar-toggler-icon"></span></button>
 					<div className="collapse navbar-collapse text-end text-sm-end text-md-end text-lg-end text-xl-end text-xxl-end d-lg-flex justify-content-lg-end align-items-lg-center" id="navcol-1">
 						<ul className="navbar-nav">
 							<li className="nav-item"><a className="nav-link active" href="#about">Sobre</a></li>
