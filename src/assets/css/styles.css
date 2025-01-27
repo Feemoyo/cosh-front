@@ -1,0 +1,57 @@
+#about {
+  text-align: center;
+  padding: 50px;
+  background-color: #001B2Cff;
+  margin-top: 65px;
+}
+
+#about .about-banner {
+  background-color: var(--bs-info-bg-subtle);
+  border-radius: 20px;
+  padding: 40px;
+}
+
+#logo {
+  max-width: 42px;
+  margin-right: -5px;
+  margin-top: -3px;
+  display: inline-block;
+}
+
+#contato {
+  background-color: var(--bs-info-bg-subtle);
+}
+
+#fundadores {
+  background-color: #001B2Cff;
+}
+
+#footer {
+  background-color: var(--bs-info-bg-subtle);
+}
+
+#checklist {
+  padding-top: 65px;
+}
+
+.side-botton {
+  margin-right: 10px;
+  position: relative;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+}
+
+.sidebar {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.project-span {
+  width: 116px;
+}
+
