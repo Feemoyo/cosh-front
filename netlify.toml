@@ -1,2 +1,4 @@
-[headers]
-"/src/main.jsx" = [ "Content-Type: application/javascript" ]
+[[headers]]
+for = "/*.jsx"
+  [headers.values]
+  Content-Type = "application/javascript"
