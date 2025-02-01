@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ACCESS_TOKEN } from '../constants';
 import api from '../api';
 
+const PATH_PROJECTS = import.meta.env.VITE_API_PATH_PROJECTS;
+
 function FormProject() {
 	const [name, setName] = useState('');
 	const [customer, setCustomer] = useState('');
@@ -20,7 +22,7 @@ function FormProject() {
 		formData.append('accountable', accountable);
 
 		try {
-			const response = await api.post(import.meta.env.VITE_API_PATH_PROJECTS, formData, {
+			const response = await api.post(PATH_PROJECTS, formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
 					Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,

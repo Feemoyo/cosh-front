@@ -4,6 +4,8 @@ import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
 
+const PATH_REFRESH = import.meta.env.VITE_API_PATH_REFRESH;
+
 function ProtectedRoute({children}) {
 	const [isAuthorized, setIsAuthorized] = useState(null);
 
@@ -16,7 +18,7 @@ function ProtectedRoute({children}) {
 	const refreshToken = async () => {
 		const refreshToken = localStorage.getItem(REFRESH_TOKEN);
 		try {
-			const response = await api.post(import.meta.env.VITE_API_PATH_REFRESH, {
+			const response = await api.post(PATH_REFRESH, {
 				refresh: refreshToken,
 			});
 			if (response.status === 200) {
