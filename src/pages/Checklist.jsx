@@ -3,6 +3,8 @@ import FormProject from "../components/FormProject";
 import { useApiData } from "../components/ApiState";
 import { useState, useEffect } from "react";
 import api from "../api";
+import { all } from "axios";
+import MainContent from "../components/mainContent";
 
 const PATH_PROJECT = import.meta.env.VITE_API_PATH_PROJECTS;
 const PATH_NOTES = import.meta.env.VITE_API_PATH_NOTES;
@@ -23,7 +25,23 @@ function Checklist() {
 			onClick={() => setActiveProject(project.name)}>
 			{project.name}
 		</a>
-	));
+	)) || [];
+
+	const allData = [
+		...projectLinks,
+
+	];
+
+	projectLinks.push(
+		<a 
+			key="new"
+			className="text-decoration-none text-reset side-botton"
+			href="#"
+			onClick={() => setActiveProject('ADD_Project')}>
+			New Project
+		</a>
+	);
+
 
 	return (
 		<div>
@@ -35,19 +53,7 @@ function Checklist() {
 							{projectLinks}
 						</div>
 						<div className="col-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 col-xxl-10">
-							<div className="row">
-								<div className="col"></div>
-								<div className="col"></div>
-							</div>
-							<div className="row">
-								<div className="col"></div>
-								<div className="col"></div>
-							</div>
-							<div className="row">
-								<div className="col">
-									<FormProject />
-								</div>
-							</div>
+							<MainContent activeProject={activeProject} />
 						</div>
 					</div>
 				</div>
