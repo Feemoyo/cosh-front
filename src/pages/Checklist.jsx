@@ -15,7 +15,7 @@ function Checklist() {
 	const notes = useApiData(PATH_NOTES);
 	const users = useApiData(PATH_USERS);
 
-	const [activeProject, setActiveProject] = useState('');
+	const [activeProject, setActiveProject] = useState('ADD_Project');
 
 	const projectLinks = projects?.map((project, index) => (
 		<a 
@@ -36,6 +36,14 @@ function Checklist() {
 		<a 
 			key="new"
 			className="text-decoration-none text-reset side-botton"
+			style={{ 
+				borderStyle: 'solid', 
+				borderColor: 'var(--bs-primary)', 
+				borderRadius: '8px', 
+				paddingLeft: '3px',
+				paddingRight: '3px',
+				background: 'var(--bs-primary-border-subtle)' 
+			}}
 			href="#"
 			onClick={() => setActiveProject('ADD_Project')}>
 			New Project
