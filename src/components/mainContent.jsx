@@ -1,30 +1,27 @@
-import React from "react";
-import FormProject from "./FormProject";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useApiData } from "./ApiState";
+import TaskList from "./Tasks/TaskList";
+import AddTaskForm from "./Tasks/AddTaskForm";
+import FormProject from "./FormProject";
+import api from "../api";
 
 const PATH_NOTES = import.meta.env.VITE_API_PATH_NOTES;
 
-// Estrutura padrão de um projeto
 const defaultProject = {
-	id: "",
-	project: "",
-	title: "",
+	accountable: "",
 	text: "",
 };
 
 function MainContent({ activeProject }) {
 	const [filteredProjects, setFilteredProjects] = useState([]);
-	const [newProject, setNewProject] = useState({ ...defaultProject }); // Estado para o novo projeto
+	const [newProject, setNewProject] = useState({ ...defaultProject });
 	const data = useApiData(PATH_NOTES);
 
 	useEffect(() => {
-		if (activeProject === 'ADD_Project') {
-			return;
-		}
+		if (activeProject === 'ADD_Project') return;
 
 		const filtered = data.filter((project) => project.project === activeProject);
-		setFilteredProjects(filtered.map(project => ({ ...project, isEditing: false }))); // Adiciona um campo isEditing a cada projeto
+		setFilteredProjects(filtered.map(project => ({ ...project, isEditing: false })));
 	}, [activeProject, data]);
 
 	if (activeProject === 'ADD_Project') {
@@ -39,136 +36,96 @@ function MainContent({ activeProject }) {
 		);
 	};
 
-	const handleSave = (id) => {
-		// Aqui você pode adicionar a lógica para salvar as alterações no backend
-		console.log("Salvando alterações para o item com ID:", id);
+const handleSave = async (id) => {
+	console.log("Salvando alterações para o item com ID:", id);
+
+	// Encontra o item que está sendo editado
+	const itemToUpdate = filteredProjects.find(project => project.id === id);
+	if (!itemToUpdate) return;
+
+	// Cria um objeto FormData e adiciona apenas os campos do item
+	const formData = new FormData();
+	Object.keys(itemToUpdate).forEach(key => {
+		if (key !== "isEditing") { // Ignora o campo isEditing, pois não deve ser enviado
+			formData.append(key, itemToUpdate[key]);
+		}
+	});
+
+	try {
+		// Faz a requisição PUT para atualizar o item
+		const response = await api.put(`${PATH_NOTES}${id}/`, formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+
+		console.log("Resposta da API:", response.data);
+
+		// Atualiza o estado para sair do modo de edição
 		setFilteredProjects(prevProjects =>
 			prevProjects.map(project =>
 				project.id === id ? { ...project, isEditing: false } : project
 			)
 		);
+	} catch (error) {
+		console.error('Erro ao salvar as mudanças:', error);
+	}
+};
+
+	const handleFieldChange = (id, key, value) => {
+		setFilteredProjects(prevProjects =>
+			prevProjects.map(project =>
+				project.id === id ? { ...project, [key]: value } : project
+			)
+		);
 	};
 
 	const handleAddNewProject = () => {
-		// Adiciona o novo projeto à lista
-		const newId = filteredProjects.length + 1; // Gera um ID simples (substitua por uma lógica adequada)
-		const projectToAdd = { ...newProject, id: newId, isEditing: false };
-		setFilteredProjects([...filteredProjects, projectToAdd]);
-		setNewProject({ ...defaultProject }); // Limpa o formulário de novo projeto
+		newProject['project'] = activeProject;
+		console.log("handle", newProject)
+		newProject['date'] = new Date().toISOString().slice(0, 10);
+
+		const formData = new FormData();
+
+		Object.keys(newProject).forEach(key => {
+			formData.append(key, newProject[key]);
+		});
+
+		try {
+			const response = api.post(PATH_NOTES, formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+
+			useApiData(PATH_NOTES);
+			console.log("Resposta da API:", response.data);
+		} catch (error) {
+			console.error('Erro ao salvar as mudanças:', error);
+		}
+
+		// const projectToAdd = { ...newProject, isEditing: false };
+		// setFilteredProjects([...filteredProjects, projectToAdd]);
+		// setNewProject({ ...defaultProject });
 	};
 
 	const handleNewProjectChange = (key, value) => {
-		// Atualiza o estado do novo projeto
 		setNewProject(prev => ({ ...prev, [key]: value }));
 	};
 
-	// Define as chaves a serem renderizadas
-	const keys = Object.keys(filteredProjects[0] || defaultProject).filter(key => key !== "isEditing");
-
 	return (
 		<div className="col-12 col-sm-12 col-md-9 col-lg-9 col-xl-10 col-xxl-10">
-			<ul className="list-group">
-				{filteredProjects.map((item) => {
-					const isEditing = item.isEditing; // Verifica se o item atual está sendo editado
-
-					return (
-						<li key={item.id} className="list-group-item">
-							<div>
-								{keys.map((key) => (
-									<div key={key}>
-										<label className="form-label" style={{ padding: '0px', paddingRight: '5px' }}>
-											{key}:
-										</label>
-										{key === "text" ? (
-											<textarea
-												value={item[key]}
-												readOnly={!isEditing}
-												onChange={(e) => {
-													// Atualiza o valor do campo "text" no estado local
-													const updatedProjects = filteredProjects.map(project =>
-														project.id === item.id ? { ...project, [key]: e.target.value } : project
-													);
-													setFilteredProjects(updatedProjects);
-												}}
-												rows={3} // Número de linhas do textarea
-												style={{ width: "100%" }}
-											/>
-										) : (
-											<input
-												type="text"
-												value={item[key]}
-												readOnly={!isEditing}
-												onChange={(e) => {
-													// Atualiza o valor do campo no estado local
-													const updatedProjects = filteredProjects.map(project =>
-														project.id === item.id ? { ...project, [key]: e.target.value } : project
-													);
-													setFilteredProjects(updatedProjects);
-												}}
-											/>
-										)}
-									</div>
-								))}
-							</div>
-
-							<div style={{ display: 'inline-flex' }}>
-								<div className="form-check" style={{ paddingRight: '10px' }}>
-									<input
-										className="form-check-input"
-										type="checkbox"
-										id={`formCheck-${item.id}`}
-										checked={isEditing}
-										onChange={() => handleEdit(item.id)}
-									/>
-									<label className="form-check-label" htmlFor={`formCheck-${item.id}`}>
-										Editar
-									</label>
-								</div>
-
-								{isEditing && (
-									<button className="btn btn-primary" type="button" onClick={() => handleSave(item.id)}>
-										Atualizar
-									</button>
-								)}
-							</div>
-						</li>
-					);
-				})}
-
-				{/* Novo item para adicionar projetos */}
-				<li className="list-group-item">
-					<div>
-						{keys.map((key) => (
-							<div key={key}>
-								<label className="form-label" style={{ padding: '0px', paddingRight: '5px' }}>
-									{key}:
-								</label>
-								{key === "text" ? (
-									<textarea
-										value={newProject[key] || ""}
-										onChange={(e) => handleNewProjectChange(key, e.target.value)}
-										rows={3}
-										style={{ width: "100%" }}
-									/>
-								) : (
-									<input
-										type="text"
-										value={newProject[key] || ""}
-										onChange={(e) => handleNewProjectChange(key, e.target.value)}
-									/>
-								)}
-							</div>
-						))}
-					</div>
-					<button
-						className="btn btn-success mt-2"
-						type="button"
-						onClick={handleAddNewProject}
-					>
-						Adicionar
-					</button>
-				</li>
-			</ul>
+			<TaskList
+				projects={filteredProjects}
+				onEdit={handleEdit}
+				onSave={handleSave}
+				onFieldChange={handleFieldChange}
+			/>
+			<AddTaskForm
+				newProject={newProject}
+				onAddProject={handleAddNewProject}
+				onNewProjectChange={handleNewProjectChange}
+			/>
 		</div>
 	);
 }
