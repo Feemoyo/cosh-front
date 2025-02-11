@@ -36,5 +36,43 @@ export const useApiData = (route) => {
 		}
 	}, [route, setData]);
 
-	return data[route];
+	const postData = async (newData) => {
+		try {
+			const response = await api.post(route, newData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				}
+			});
+			console.log("Dados enviados com sucesso:", response.data);
+
+			setData((prevData) => ({
+				...prevData,
+				[route]: [...(prevData[route] || []), response.data],
+			}));
+		} catch (error) {
+			console.error("Erro ao enviar dados para a API:", error);
+		}
+	};
+
+	const putData = async (id, newData) => {
+		try {
+			const response = await api.put(`${route}${id}/`, newData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+			console.log("Dados atualizados com sucesso:", response.data);
+
+			setData((prevData) => ({
+				...prevData,
+				[route]: prevData[route].map((item) =>
+					item.id === id ? response.data : item
+				),
+			}));
+		} catch (error) {
+			console.error("Erro ao atualizar dados na API:", error);
+		}
+	};
+
+	return { data: data[route], postData, putData };
 };

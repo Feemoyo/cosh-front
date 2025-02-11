@@ -15,7 +15,7 @@ const defaultProject = {
 function MainContent({ activeProject }) {
 	const [filteredProjects, setFilteredProjects] = useState([]);
 	const [newProject, setNewProject] = useState({ ...defaultProject });
-	const data = useApiData(PATH_NOTES);
+	const {data, postData, putData} = useApiData(PATH_NOTES);
 
 	useEffect(() => {
 		if (activeProject === 'ADD_Project') return;
@@ -39,37 +39,17 @@ function MainContent({ activeProject }) {
 const handleSave = async (id) => {
 	console.log("Salvando alterações para o item com ID:", id);
 
-	// Encontra o item que está sendo editado
 	const itemToUpdate = filteredProjects.find(project => project.id === id);
 	if (!itemToUpdate) return;
 
-	// Cria um objeto FormData e adiciona apenas os campos do item
 	const formData = new FormData();
 	Object.keys(itemToUpdate).forEach(key => {
-		if (key !== "isEditing") { // Ignora o campo isEditing, pois não deve ser enviado
+		if (key !== "isEditing") {
 			formData.append(key, itemToUpdate[key]);
 		}
 	});
 
-	try {
-		// Faz a requisição PUT para atualizar o item
-		const response = await api.put(`${PATH_NOTES}${id}/`, formData, {
-			headers: {
-				"Content-Type": "multipart/form-data",
-			},
-		});
-
-		console.log("Resposta da API:", response.data);
-
-		// Atualiza o estado para sair do modo de edição
-		setFilteredProjects(prevProjects =>
-			prevProjects.map(project =>
-				project.id === id ? { ...project, isEditing: false } : project
-			)
-		);
-	} catch (error) {
-		console.error('Erro ao salvar as mudanças:', error);
-	}
+	putData(id, formData);
 };
 
 	const handleFieldChange = (id, key, value) => {
@@ -91,22 +71,11 @@ const handleSave = async (id) => {
 			formData.append(key, newProject[key]);
 		});
 
-		try {
-			const response = api.post(PATH_NOTES, formData, {
-				headers: {
-					"Content-Type": "multipart/form-data",
-				},
-			});
+		postData(formData);
 
-			useApiData(PATH_NOTES);
-			console.log("Resposta da API:", response.data);
-		} catch (error) {
-			console.error('Erro ao salvar as mudanças:', error);
-		}
-
-		// const projectToAdd = { ...newProject, isEditing: false };
-		// setFilteredProjects([...filteredProjects, projectToAdd]);
-		// setNewProject({ ...defaultProject });
+		const projectToAdd = { ...newProject, isEditing: false };
+		setFilteredProjects([...filteredProjects, projectToAdd]);
+		setNewProject({ ...defaultProject });
 	};
 
 	const handleNewProjectChange = (key, value) => {

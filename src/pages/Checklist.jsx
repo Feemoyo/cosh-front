@@ -11,9 +11,9 @@ const PATH_NOTES = import.meta.env.VITE_API_PATH_NOTES;
 const PATH_USERS = import.meta.env.VITE_API_PATH_USERS;
 
 function Checklist() {
-	const projects = useApiData(PATH_PROJECT);
-	const notes = useApiData(PATH_NOTES);
-	const users = useApiData(PATH_USERS);
+	const {data: projects} = useApiData(PATH_PROJECT);
+	const {data: notes} = useApiData(PATH_NOTES);
+	const {data: users} = useApiData(PATH_USERS);
 
 	const [activeProject, setActiveProject] = useState('ADD_Project');
 
@@ -26,6 +26,8 @@ function Checklist() {
 			{project.name}
 		</a>
 	)) || [];
+
+	console.log("projects", projectLinks);
 
 	const allData = [
 		...projectLinks,
